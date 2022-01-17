@@ -42,6 +42,7 @@ public class JWTTokenVerifier extends OncePerRequestFilter {
                                     @NotNull HttpServletResponse response,
                                     @NotNull FilterChain filterChain)
             throws ServletException, IOException {
+
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         String tokenPrefix = jwtConfig.getTokenPrefix();
         if (Strings.isNullOrEmpty(authorizationHeader) ||

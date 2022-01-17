@@ -21,6 +21,8 @@ import java.util.*;
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/auth")
+//@CrossOrigin(origins = "http://127.0.0.1:5500", allowCredentials = "true")
+
 public class AuthController {
     private final AppUserService appUserService;
     private static final Map<String, Object> RESPONSE = new LinkedHashMap<>();
@@ -38,7 +40,7 @@ public class AuthController {
             String message = appUserService.addUser(request);
             log.info("Message: {}", message);
             if (message.equals("Success")) {
-                RESPONSE.put("status", "Success");
+                RESPONSE.put("status", message);
                 RESPONSE.put("message", "User is added successfully");
             }
             RESPONSE.put("status", "Failure");
@@ -66,9 +68,6 @@ public class AuthController {
             httpServletResponse.addHeader(HttpHeaders.COOKIE, deleteServletCookie.getValue());
             RESPONSE.put("status", "Success");
             RESPONSE.put("message", "User is logged out successfully");
-        } else {
-            RESPONSE.put("status", "Failure");
-            RESPONSE.put("message", "User is not logged out");
         }
         return new ResponseEntity<>(RESPONSE, HttpStatus.OK);
     }

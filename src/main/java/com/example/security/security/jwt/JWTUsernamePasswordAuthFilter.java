@@ -2,11 +2,11 @@ package com.example.security.security.jwt;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.io.CharStreams;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,10 +17,13 @@ import javax.servlet.FilterChain;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class JWTUsernamePasswordAuthFilter extends UsernamePasswordAuthenticationFilter {
@@ -54,9 +57,10 @@ public class JWTUsernamePasswordAuthFilter extends UsernamePasswordAuthenticatio
                                                 HttpServletResponse response)
             throws AuthenticationException {
         Cookie[] cookies = request.getCookies();
-        System.out.println("Incoming cookies : " + Arrays.toString(cookies));
-        String payload = CharStreams.toString
-                (new InputStreamReader(request.getInputStream()));
+        log.info("Incoming cookies: " + Arrays.toString(cookies));
+        String payload = new BufferedReader(new InputStreamReader(request.getInputStream()))
+                .lines()
+                .collect(Collectors.joining(System.lineSeparator()));
         Map<String, Object> json = MAPPER.readValue
                 (payload, new TypeReference<Map<String, Object>>() {});
         String username = (String) json.get("username");
@@ -75,18 +79,19 @@ public class JWTUsernamePasswordAuthFilter extends UsernamePasswordAuthenticatio
         log.info("Auth result: {}", authResult);
         String token = jwtService.createJWT(authResult);
         Cookie cookie = new Cookie(COOKIE_NAME, token);
-        cookie.setSecure(true);
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
+//        cookie.setSecure(true); // to work only in https
+//        cookie.setHttpOnly(true);
+//        cookie.setPath("/");
         cookie.setMaxAge(3600 * 24 * jwtConfig.getTokenExpiration());
 
         log.info("Cookie: {}", cookie.getValue());
         response.addHeader(HttpHeaders.COOKIE, cookie.getValue());
+        response.addCookie(cookie);
 
         // add token to the header
         String JWT = jwtConfig.getTokenPrefix() + token;
         response.addHeader(HttpHeaders.AUTHORIZATION, JWT);
-        // send jwt token as response body
+        // send JWT token to response body
         Map<String, Object> accessToken = new LinkedHashMap<>();
         accessToken.put("access_token", token);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);

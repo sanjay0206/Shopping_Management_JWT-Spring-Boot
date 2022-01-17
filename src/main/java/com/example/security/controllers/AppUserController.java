@@ -29,7 +29,7 @@ public class AppUserController {
         String message = appUserService.addUser(request);
         log.info("Message: {}", message);
         if (message.equals("Success")) {
-            RESPONSE.put("status", "Success");
+            RESPONSE.put("status", message);
             RESPONSE.put("message", "User is added successfully");
         } else {
             RESPONSE.put("status", "Failure");
@@ -45,7 +45,7 @@ public class AppUserController {
         String message = appUserService.updateUser(request);
         log.info("Message: {}", message);
         if (message.equals("Success")) {
-            RESPONSE.put("status", "Success");
+            RESPONSE.put("status", message);
             RESPONSE.put("message", "User is updated");
         } else {
             RESPONSE.put("status", "Failure");
@@ -60,7 +60,7 @@ public class AppUserController {
         String message = appUserService.deleteUser(userId);
         log.info("Message: {}", message);
         if (message.equals("Success")) {
-            RESPONSE.put("status", "Success");
+            RESPONSE.put("status", message);
             RESPONSE.put("message", "User is deleted");
         } else {
             RESPONSE.put("status", "Failure");

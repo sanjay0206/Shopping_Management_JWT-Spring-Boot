@@ -1,6 +1,7 @@
 package com.example.security.entities;
 
 import com.example.security.security.ApplicationUserRole;
+
 import javax.persistence.*;
 import java.util.List;
 

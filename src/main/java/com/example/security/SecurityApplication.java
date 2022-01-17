@@ -1,6 +1,8 @@
 package com.example.security;
 
-import com.example.security.entities.*;
+import com.example.security.entities.AppUser;
+import com.example.security.entities.Category;
+import com.example.security.entities.Product;
 import com.example.security.repositories.AppUserRepo;
 import com.example.security.repositories.ProductRepo;
 import org.springframework.boot.CommandLineRunner;
@@ -8,10 +10,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import static com.example.security.security.ApplicationUserRole.*;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static com.example.security.security.ApplicationUserRole.*;
 
 @SpringBootApplication
 @Configuration
@@ -65,4 +68,5 @@ public class SecurityApplication {
 			productRepo.saveAll(products);
 		};
 	}
+
 }

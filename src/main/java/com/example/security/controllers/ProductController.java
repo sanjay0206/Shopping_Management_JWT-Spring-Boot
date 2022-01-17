@@ -35,8 +35,8 @@ public class ProductController {
         String message = productService.addProduct(request);
         log.info("Message: {}", message);
         if (message.equals("Success")) {
-            RESPONSE.put("status", "Success");
-            RESPONSE.put("message", "User is added successfully");
+            RESPONSE.put("status", message);
+            RESPONSE.put("message", "Product is added successfully");
         } else {
             RESPONSE.put("status", "Failure");
             RESPONSE.put("message", message);
@@ -51,7 +51,7 @@ public class ProductController {
         String message = productService.deleteProduct(productId);
         log.info("Message: {}", message);
         if (message.equals("Success")) {
-            RESPONSE.put("status", "Success");
+            RESPONSE.put("status", message);
             RESPONSE.put("message", "Product is deleted");
         } else {
             RESPONSE.put("status", "Failure");
@@ -67,7 +67,7 @@ public class ProductController {
         String message = productService.updateProduct(request);
         log.info("Message: {}", message);
         if (message.equals("Success")) {
-            RESPONSE.put("status", "Success");
+            RESPONSE.put("status", message);
             RESPONSE.put("message", "Product is updated");
         } else {
             RESPONSE.put("status", "Failure");
