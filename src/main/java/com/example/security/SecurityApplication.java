@@ -22,7 +22,7 @@ public class SecurityApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SecurityApplication.class, args);
-		System.out.println("Spring security is working...");
+		System.out.println("Shopping Management App is running...");
 	}
 
 	@Bean
@@ -36,9 +36,7 @@ public class SecurityApplication {
 			AppUser appUser5 = new AppUser("alex.hales", "alex123", "alex.hales@gmail.com", VENDOR);
 			AppUser appUser6 = new AppUser("stuart.little", "stuart13", "stuart.little@gmail.com", VENDOR);
 			AppUser appUser7 = new AppUser("ahmad.bilal", "ahmad123", "ahmad.bilal@gmail.com", USER);
-			List<AppUser> appUsers = Arrays.asList(
-					appUser1, appUser2, appUser3, appUser4, appUser5, appUser6, appUser7
-			);
+			List<AppUser> appUsers = Arrays.asList(appUser1, appUser2, appUser3, appUser4, appUser5, appUser6, appUser7);
 			appUserRepo.saveAll(appUsers);
 
 			Product product1 = new Product("Mi TV 40A", Category.ELECTRONICS, 19000.00);
@@ -62,11 +60,8 @@ public class SecurityApplication {
 			// Groceries
 			product5.setAppUser(appUser6);
 			product7.setAppUser(appUser6);
-			List<Product> products = Arrays.asList(
-					product1, product2, product3, product5, product6, product7, product8
-			);
+			List<Product> products = Arrays.asList(product1, product2, product3, product5, product6, product7, product8);
 			productRepo.saveAll(products);
 		};
 	}
-
 }

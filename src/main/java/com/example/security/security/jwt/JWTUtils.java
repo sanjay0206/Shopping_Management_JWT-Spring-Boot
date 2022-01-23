@@ -16,11 +16,11 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class JWTService {
+public class JWTUtils {
     private final JWTConfig jwtConfig;
 
     @Autowired
-    public JWTService(JWTConfig jwtConfig) {
+    public JWTUtils(JWTConfig jwtConfig) {
         this.jwtConfig = jwtConfig;
     }
 

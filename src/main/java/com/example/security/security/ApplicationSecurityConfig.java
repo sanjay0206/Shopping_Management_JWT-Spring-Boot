@@ -1,12 +1,14 @@
 package com.example.security.security;
 
 import com.example.security.security.jwt.JWTConfig;
-import com.example.security.security.jwt.JWTService;
 import com.example.security.security.jwt.JWTTokenVerifier;
 import com.example.security.security.jwt.JWTUsernamePasswordAuthFilter;
+import com.example.security.security.jwt.JWTUtils;
+import com.google.common.net.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -22,6 +24,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -30,17 +33,17 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     private final PasswordConfig passwordConfig;
     private final UserDetailsService userDetailsService;
     private final JWTConfig jwtConfig;
-    private final JWTService jwtService;
+    private final JWTUtils jwtUtils;
 
     @Autowired
     public ApplicationSecurityConfig(PasswordConfig passwordConfig,
                                      UserDetailsService userDetailsService,
                                      JWTConfig jwtConfig,
-                                     JWTService jwtService) {
+                                     JWTUtils jwtUtils) {
         this.passwordConfig = passwordConfig;
         this.userDetailsService = userDetailsService;
         this.jwtConfig = jwtConfig;
-        this.jwtService = jwtService;
+        this.jwtUtils = jwtUtils;
     }
 
     @Override
@@ -48,10 +51,9 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 //        http.cors(Customizer.withDefaults());
 
         JWTUsernamePasswordAuthFilter usernamePasswordAuthFilter
-                = new JWTUsernamePasswordAuthFilter(
-                        authenticationManager(), jwtConfig, jwtService)
+                = new JWTUsernamePasswordAuthFilter(authenticationManager(), jwtConfig, jwtUtils)
                 .getJWTAuthenticationFilter();
-        JWTTokenVerifier jwtTokenVerifier = new JWTTokenVerifier(jwtConfig, jwtService);
+        JWTTokenVerifier jwtTokenVerifier = new JWTTokenVerifier(jwtConfig, jwtUtils);
         http// by default uses a Bean by the name of corsConfigurationSource
                 .cors()
                 .and()
@@ -69,18 +71,18 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticated();
     }
 
-
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
+        List<String> headers = Arrays.asList(HttpHeaders.AUTHORIZATION, HttpHeaders.COOKIE, HttpHeaders.CONTENT_TYPE, HttpHeaders.ACCEPT);
+        List<String> allowedMethods = Arrays.asList(HttpMethod.GET.name(), HttpMethod.POST.name(), HttpMethod.PUT.name(), HttpMethod.DELETE.name(), HttpMethod.OPTIONS.name());
         configuration.setAllowedOrigins(Collections.singletonList("http://127.0.0.1:5500"));
-        configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cookie", "Accept", "Content-Type"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
+        configuration.setAllowedMethods(allowedMethods);
+        configuration.setAllowedHeaders(headers);
+        UrlBasedCorsConfigurationSource corsConfiguration = new UrlBasedCorsConfigurationSource();
+        corsConfiguration.registerCorsConfiguration("/**", configuration);
+        return corsConfiguration;
     }
-
     @Bean
     public DaoAuthenticationProvider authProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();

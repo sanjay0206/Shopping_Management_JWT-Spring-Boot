@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -30,13 +29,13 @@ public class JWTUsernamePasswordAuthFilter extends UsernamePasswordAuthenticatio
 
     private final AuthenticationManager authenticationManager;
     private final JWTConfig jwtConfig;
-    private final JWTService jwtService;
+    private final JWTUtils jwtService;
     private static final ObjectMapper MAPPER = new ObjectMapper();
     public static final String COOKIE_NAME = "access-token";
 
     public JWTUsernamePasswordAuthFilter(AuthenticationManager authenticationManager,
                                          JWTConfig jwtConfig,
-                                         JWTService jwtService) {
+                                         JWTUtils jwtService) {
         this.authenticationManager = authenticationManager;
         this.jwtConfig = jwtConfig;
         this.jwtService = jwtService;
@@ -57,7 +56,10 @@ public class JWTUsernamePasswordAuthFilter extends UsernamePasswordAuthenticatio
                                                 HttpServletResponse response)
             throws AuthenticationException {
         Cookie[] cookies = request.getCookies();
-        log.info("Incoming cookies: " + Arrays.toString(cookies));
+        log.info("Incoming cookies: ");
+//        for (Cookie cookie : cookies) {
+//            if (cookie.)
+//        }
         String payload = new BufferedReader(new InputStreamReader(request.getInputStream()))
                 .lines()
                 .collect(Collectors.joining(System.lineSeparator()));

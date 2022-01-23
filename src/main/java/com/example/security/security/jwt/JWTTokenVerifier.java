@@ -28,11 +28,11 @@ import java.util.stream.Collectors;
 @Slf4j
 public class JWTTokenVerifier extends OncePerRequestFilter {
     private final JWTConfig jwtConfig;
-    private final JWTService jwtService;
+    private final JWTUtils jwtService;
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     @Autowired
-    public JWTTokenVerifier(JWTConfig jwtConfig, JWTService jwtService) {
+    public JWTTokenVerifier(JWTConfig jwtConfig, JWTUtils jwtService) {
         this.jwtConfig = jwtConfig;
         this.jwtService = jwtService;
     }

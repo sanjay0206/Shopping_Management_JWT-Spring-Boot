@@ -21,8 +21,6 @@ import java.util.*;
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/auth")
-//@CrossOrigin(origins = "http://127.0.0.1:5500", allowCredentials = "true")
-
 public class AuthController {
     private final AppUserService appUserService;
     private static final Map<String, Object> RESPONSE = new LinkedHashMap<>();
@@ -31,7 +29,6 @@ public class AuthController {
     public AuthController(AppUserService appUserService) {
         this.appUserService = appUserService;
     }
-
 
     @PostMapping(path = "/signUp")
     public ResponseEntity<Map<String, Object>> signUp(@RequestBody Map<String, Object> request) {
